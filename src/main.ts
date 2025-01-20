@@ -37,11 +37,17 @@ app.post("/produtos", async (req, res) => {
 
 //DELETAR
 app.delete("/produtos/:id",async(req,res)=>{
+    try{
     const banco = new BancoMysql()
     await banco.criarConexao()
     const result = await banco.excluir(req.params.id)
     await banco.finalizarConexao()
-    res.send("Produto excluido com sucesso id: "+req.params.id)
+    res.status(200).send("Produto excluido com sucesso id: "+req.params.id)
+}
+catch(e){
+    console.log(e)
+    res.status(500).send("Erro ao excluir")
+}
 })
 
 //ALTERAR
@@ -52,7 +58,7 @@ app.put("/produtos/:id",async(req,res)=>{
     await banco.criarConexao()
     const result = await banco.alterar(req.params.id,produto)
     await banco.finalizarConexao()
-    res.send("Produto alterado com sucesso id: "+req.params.id)
+    res.status(200).send("Produto alterado com sucesso id: "+req.params.id)
 })
 
 app.listen(8000, () => {
